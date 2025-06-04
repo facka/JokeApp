@@ -1,6 +1,9 @@
 <script setup lang="ts">
 import { onMounted } from 'vue'
-import { useJokesStore } from '../stores/jokesStore.js'
+import JokeCard from '../components/JokeCard.vue'
+import Pagination from '../components/PaginationNavbar.vue'
+import SortControl from '../components/SortControl.vue'
+import { useJokesStore } from '../stores/jokesStore'
 
 const store = useJokesStore()
 
@@ -10,13 +13,16 @@ onMounted(() => {
 </script>
 
 <template>
-  <h1>Jokes</h1>
-  <div class="jokes">
-    <ul>
-      <li v-for="joke in store.getJokes" :key="joke.id">
-        <h3>{{ joke.setup }}:</h3>
-        {{ joke.punchline }}
-      </li>
-    </ul>
+  <div>
+    <SortControl @sort="store.setSortKey" />
+    <div class="bg-whitegrid flex flex-col gap-4">
+      <JokeCard v-for="joke in store.paginatedJokes" :key="joke.id" :joke="joke" />
+    </div>
+    <Pagination
+      :current-page="store.currentPage"
+      :total-items="store.sortedJokes.length"
+      :page-size="store.pageSize"
+      @page-changed="store.setPage"
+    />
   </div>
 </template>
