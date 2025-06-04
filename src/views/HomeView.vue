@@ -16,7 +16,12 @@ onMounted(() => {
   <div>
     <SortControl @sort="store.setSortKey" />
     <div class="bg-whitegrid flex flex-col gap-4">
-      <JokeCard v-for="joke in store.paginatedJokes" :key="joke.id" :joke="joke" />
+      <JokeCard
+        v-for="joke in store.paginatedJokes"
+        :key="joke.id"
+        :joke="joke"
+        data-testid="joke-card"
+      />
     </div>
     <Pagination
       :current-page="store.currentPage"

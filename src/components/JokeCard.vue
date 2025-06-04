@@ -1,5 +1,8 @@
 <template>
-  <div class="p-4 rounded border border-white border-1 shadow">
+  <div
+    class="p-4 rounded border border-white border-1 shadow"
+    :data-testid="`joke-card-${joke.id}`"
+  >
     <p class="text-gray-200 font-bold">{{ joke.setup }}</p>
     <p class="text-gray-500">{{ joke.punchline }}</p>
   </div>
