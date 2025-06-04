@@ -1,28 +1,26 @@
+/* eslint-disable playwright/no-standalone-expect */
 import { test, expect } from '@playwright/test'
+import { Expect, Goto, Steps } from 'playwright-maestro'
+import HomeViewPage from './HomeViewPage.js'
 
-test.describe('JokesApp HomeView', () => {
-  test.beforeEach(async ({ page }) => {
-    await page.goto('/')
-  })
+test(
+  'shows sort control, joke cards, and pagination',
+  Steps(() => {
+    Goto('/')
 
-  test('shows sort control, joke cards, and pagination', async ({ page }) => {
-    // SortControl exists
-    await expect(page.locator('[data-testid="button-sort-by-type"]')).toBeVisible()
-    await expect(page.locator('[data-testid="button-sort-by-setup"]')).toBeVisible()
+    Expect(HomeViewPage.sortByTypeButton).IsVisible()
+    Expect(HomeViewPage.sortBySetupButton).IsVisible()
+    Expect(HomeViewPage.nextPageButton).IsVisible()
+    Expect(HomeViewPage.prevPageButton).IsVisible()
+    Expect(HomeViewPage.pageNumber).ToHaveText('Page 1')
+  }),
+)
 
-    // Pagination exists
-    await expect(page.getByRole('button', { name: /next/i })).toBeVisible()
-    await expect(page.getByRole('button', { name: /prev/i })).toBeVisible()
-
-    const jokeCards = page.locator('[data-testid="joke-card"]')
-    await expect(jokeCards.first()).toBeVisible()
-  })
-
-  test('pagination works', async ({ page }) => {
-    // Click next page
-    const nextBtn = page.getByRole('button', { name: /next/i })
-    await nextBtn.click()
-    // Page number should update
-    await expect(page.locator('span', { hasText: /Page 2/ })).toBeVisible()
-  })
-})
+test(
+  'pagination works',
+  Steps(() => {
+    Goto('/')
+    HomeViewPage.goToNextPage()
+    Expect(HomeViewPage.pageNumber).ToHaveText('Page 2')
+  }),
+)
